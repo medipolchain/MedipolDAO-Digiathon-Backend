@@ -28,7 +28,7 @@ class DbWrapper:
         :return: True if connected to the MongoDB, Error otherwise
         """
         try:
-            self.connection_string = os.getenv("MONGODB_PWD")
+            self.connection_string = os.environ.get("MONGODB_PWD")
             self.client = MongoClient(self.connection_string)
             self.web3 = Web3()
 
@@ -85,6 +85,77 @@ class DbWrapper:
             db = self.get_database("medipoldao-digiathon")
             collection = db[collection_name]
             return collection
+
+        except Exception as e:
+            print(e)
+            return e
+
+    def set_user(self, user_info: dict):
+        """
+        :param user_info: the user info to set
+        :return: the user id
+        """
+        """
+        user_info = {
+            "tckn": "12345678901",
+            "nonce": 0
+        }
+        """
+        try:
+            if self.user_exists_by_tckn(user_info["tckn"]):
+                return HTTPException(status_code=400, detail="User already exists. Try updating it!")
+
+            if user_info["tckn"] and len(user_info["tckn"]) == 11:
+
+                collection_name = "users"
+
+                collection = self.get_collection(collection_name)
+                user = collection.insert_one(user_info).inserted_id
+                return user
+
+            else:
+                return HTTPException(status_code=400, detail="Invalid TCKN")
+
+        except Exception as e:
+            print(e)
+            return e
+
+    def user_exists_by_tckn(self, user_tckn: str):
+        """
+        :return: True if the user exists, False otherwise
+        :param user_public_address: the public address of the user to check
+        """
+        try:
+            if len(user_tckn) == 11:
+                collection_name = "users"
+
+                collection = self.get_collection(collection_name)
+                user = collection.find_one({
+                    "tckn": user_tckn
+                })
+                return user is not None
+            else:
+                return {
+                    "message": "Invalid TCKN"
+                }
+
+        except Exception as e:
+            print(e)
+            return e
+
+    def user_exists(self, user_public_address: str) -> bool:
+        """
+        :return: True if the user exists, False otherwise
+        :param user_public_address: the public address of the user to check
+        """
+        try:
+            collection_name = "users"
+
+            collection = self.get_collection(collection_name)
+            user = collection.find_one({
+                "publicAddress": user_public_address
+            })
+            return user is not None
 
         except Exception as e:
             print(e)

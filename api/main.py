@@ -173,3 +173,18 @@ async def user_jwt(info: Request):
 
     except Exception as e:
         return e
+
+@app.post('/login')
+async def login(info: Request):
+    """
+    :return: the user id
+    """
+    try:
+        req = await info.json()
+
+        user = db.login(req["tckn"],req["password"])
+
+        return user
+
+    except Exception as e:
+        return e

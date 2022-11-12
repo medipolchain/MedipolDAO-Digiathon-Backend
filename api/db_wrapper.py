@@ -188,3 +188,90 @@ class DbWrapper:
         except Exception as e:
             print(e)
             return e
+
+    def user_check(self, user_public_address: str):
+        """
+        :param user_public_address: the user public address
+        :return: the user if exists
+        """
+        try:
+            collection_name = "users"
+
+            collection = self.get_collection(collection_name)
+
+            if self.user_exists(user_public_address):
+                user = collection.find_one({"publicAddress": user_public_address})
+                if user:
+                    return HTTPException(status_code=200, detail={
+                        "message": "User retrieved successfully",
+                        "user": user
+                    })
+                else:
+                    return HTTPException(status_code=404, detail={
+                        "message": "User not found"
+                    })
+            else:
+                return HTTPException(status_code=404, detail={
+                    "message": "User not found"
+                })
+
+        except Exception as e:
+            print(e)
+            return
+
+    def update_user_nonce(self, user_public_address: str, nonce: int):
+        """
+        :param user_public_address: the public address of the user to update
+        :param nonce: the nonce to set
+        :return: True if the user was updated, Error otherwise
+        """
+        try:
+            if self.user_exists(user_public_address):
+                collection_name = "users"
+
+                collection = self.get_collection(collection_name)
+                collection.update_one({"publicAddress": user_public_address}, {"$set": {"nonce": nonce}})
+                return True
+            else:
+                return "Such user does not exist"
+
+        except Exception as e:
+            print(e)
+            return
+
+    def user_jwt(self, tckn: str):
+        try:
+            user_exists = self.user_exists_by_tckn(tckn)
+            if user_exists:
+                token = jwt.encode(
+                        {
+                            "tckn": tckn,
+                            "exp": datetime.now(tz=timezone.utc) + timedelta(days=7),
+                        },
+                        os.environ.get("SECRET"),
+                        algorithm="HS256",
+                    )
+
+                return HTTPException(status_code=200, detail={
+                        "message": "User authenticated",
+                        "token": token,
+                    })
+            else:
+                return HTTPException(status_code=404, detail={
+                    "message": "User not found"
+                })
+
+        except Exception as e:
+            print(e)
+            return e
+
+    def verify(self, token: str):
+        try:
+            decoded = jwt.decode(token, os.environ.get("SECRET"), algorithms=["HS256"])
+            return HTTPException(status_code=200, detail={
+                "message": "User verified",
+                "user": decoded
+            })
+        except Exception as e:
+            print(e)
+            return e

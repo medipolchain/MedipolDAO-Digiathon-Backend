@@ -155,3 +155,21 @@ async def update_public_address(info: Request):
 
     except Exception as e:
         return e
+
+
+@app.post("/user_jwt")
+async def user_jwt(info: Request):
+    """
+    :return: the user id
+    """
+    try:
+        req = await info.json()
+
+        token = db.user_jwt(
+            tckn=req["tckn"]
+        )
+
+        return token
+
+    except Exception as e:
+        return e

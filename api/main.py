@@ -186,3 +186,18 @@ async def login(info: Request):
 
     except Exception as e:
         return e
+
+@app.post('/verify')
+async def verify(info: Request):
+    """
+    :return: the user id
+    """
+    try:
+        req = await info.json()
+
+        user = db.verify(req["token"])
+
+        return user
+
+    except Exception as e:
+        return e

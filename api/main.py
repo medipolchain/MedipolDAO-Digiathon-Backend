@@ -128,6 +128,10 @@ async def set_user(info: Request):
         req = await info.json()
         user_info = {
             "tckn": req["tckn"],
+            "password": req["password"],
+            "publicAddress": "",
+            "name": req["name"],
+            "surname": req["surname"],
             "nonce": 0
         }
         user_id = db.set_user(user_info)

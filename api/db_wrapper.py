@@ -104,17 +104,11 @@ class DbWrapper:
         try:
             if self.user_exists_by_tckn(user_info["tckn"]):
                 return HTTPException(status_code=400, detail="User already exists. Try updating it!")
+            collection_name = "users"
 
-            if user_info["tckn"] and len(user_info["tckn"]) == 11:
-
-                collection_name = "users"
-
-                collection = self.get_collection(collection_name)
-                user = collection.insert_one(user_info).inserted_id
-                return user
-
-            else:
-                return HTTPException(status_code=400, detail="Invalid TCKN")
+            collection = self.get_collection(collection_name)
+            user = collection.insert_one(user_info).inserted_id
+            return user
 
         except Exception as e:
             print(e)

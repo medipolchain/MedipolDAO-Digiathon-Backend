@@ -78,6 +78,7 @@ async def get_users(info: Request):
         return e
 
 
+# Admin permission only should be added
 @app.post("/get_user_by_tckn")
 async def get_user_by_tckn(info: Request):
     """
@@ -97,6 +98,7 @@ async def get_user_by_tckn(info: Request):
         return e
 
 
+# Admin permission only should be added
 @app.post("/get_user")
 async def get_user_by_public_address(info: Request):
     """
@@ -116,6 +118,7 @@ async def get_user_by_public_address(info: Request):
         return e
 
 
+# Admin permission only should be added
 @app.post("/set_user")
 async def set_user(info: Request):
     """

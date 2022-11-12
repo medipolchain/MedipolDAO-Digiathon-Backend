@@ -87,7 +87,7 @@ async def get_user_by_tckn(info: Request):
     try:
         req = await info.json()
         if req["tckn"]:
-            user = db.get_user(req["tckn"])
+            user = db.get_user_by_tckn(req["tckn"])
             return user
         else:
             return {

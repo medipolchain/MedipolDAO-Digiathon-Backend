@@ -308,3 +308,23 @@ class DbWrapper:
         except Exception as e:
             print(e)
             return e
+
+    def get_user_by_tckn(self, tckn: str):
+        """
+        :param db_name: the name of the database to get the users from
+        :param collection_name: the name of the collection to get the users from
+        :return: a list of all the users in the collection
+        """
+        try:
+
+            collection_name = "users"
+
+            collection = self.get_collection(collection_name)
+            user = collection.find_one({
+                "tckn": tckn
+            })
+            return user
+
+        except Exception as e:
+            print(e)
+            return e

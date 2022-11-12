@@ -160,3 +160,31 @@ class DbWrapper:
         except Exception as e:
             print(e)
             return e
+
+    def update_user_public_address(self, user_public_address: str, tckn: str):
+        """
+        Set user public address to user_public_address by finding the user by its tckn
+        """
+        try:
+            if self.user_exists_by_tckn(tckn):
+                collection_name = "users"
+                collection = self.get_collection(collection_name)
+
+                collection.update_one({
+                    "tckn": tckn
+                }, {
+                    "$set": {
+                        "publicAddress": user_public_address
+                    }
+                })
+                return {
+                    "message": "User public address updated successfully"
+                }
+            else:
+                return {
+                    "message": "User does not exist"
+                }
+
+        except Exception as e:
+            print(e)
+            return e

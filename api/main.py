@@ -52,7 +52,7 @@ async def user_exists(info: Request) -> bool:
     try:
         req = await info.json()
         if req['tckn']:
-            exists = db.user_exists(req['tckn'])
+            exists = db.user_exists_by_tckn(req['tckn'])
 
             return exists
         else:
@@ -128,6 +128,25 @@ async def set_user(info: Request):
             "nonce": 0
         }
         user_id = db.set_user(user_info)
+
+        return user_id
+
+    except Exception as e:
+        return e
+
+
+@app.post("/update_public_address")
+async def update_public_address(info: Request):
+    """
+    :return: the user id
+    """
+    try:
+        req = await info.json()
+
+        user_id = db.update_user_public_address(
+            user_public_address=req["publicAddress"],
+            tckn=req["tckn"]
+        )
 
         return user_id
 

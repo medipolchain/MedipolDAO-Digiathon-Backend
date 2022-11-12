@@ -328,3 +328,31 @@ class DbWrapper:
         except Exception as e:
             print(e)
             return e
+
+    def set_mesken(self, mesken: str, token:str):
+        """
+        :param user_public_address: the public address of the user to update
+        :param mesken: the mesken to set
+        :return: True if the user was updated, Error otherwise
+        """
+        try:
+            decoded_user = self.verify(token)
+            userTCKN = decoded_user.detail["user"]["tckn"]
+            if not self.user_exists_by_tckn(userTCKN):
+                return HTTPException(status_code=400, detail="User does not exist!")
+
+            collection_name = "meskenlerim"
+            collection = self.get_collection(collection_name)
+            meskenId = collection.insert_one(mesken).inserted_id
+
+            collection_name = "users"
+            collection = self.get_collection(collection_name)
+            collection.update_one({"tckn": userTCKN}, {"$push": {"meskenlerim": {
+                "meskenId": meskenId,
+                "pay": "3000"
+            }}})
+            return meskenId
+
+        except Exception as e:
+            print(e)
+            return

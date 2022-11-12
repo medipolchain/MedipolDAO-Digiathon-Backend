@@ -132,11 +132,44 @@ async def set_user(info: Request):
             "publicAddress": "",
             "name": req["name"],
             "surname": req["surname"],
-            "nonce": 0
+            "nonce": 0,
+            "meskenlerim": [],
         }
         user_id = db.set_user(user_info)
 
         return user_id
+
+    except Exception as e:
+        return e
+
+@app.post("/set_mesken")
+async def set_mesken(info: Request):
+    """
+    :return: the mesken id
+    """
+    try:
+        req = await info.json()
+        token = req["token"]
+        mesken_info = {
+            "meskenId": req["meskenId"],
+            "ilId": req["ilId"],
+            "parselId": req["parselId"],
+            "zeminId":req["zeminId"],
+            "parselNo" :req["parselNo"],
+            "mahalleId": req["mahalleId"],
+            "adaNo":req["adaNo"],
+            "ilceId": req["ilceId"],
+            "katNo": req["katNo"],
+            "kapiNo": req["kapiNo"],
+            "rayicFiyat": req["rayicFiyat"],
+            "toplamPayda": req["toplamPayda"],
+            "status": req["status"],
+            "auctionInfo":{},
+            "saleHistory":[],
+        }
+        mesken_id = db.set_mesken(mesken_info,token)
+
+        return mesken_id
 
     except Exception as e:
         return e

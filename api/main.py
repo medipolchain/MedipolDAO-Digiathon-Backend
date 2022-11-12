@@ -165,9 +165,7 @@ async def user_jwt(info: Request):
     try:
         req = await info.json()
 
-        token = db.user_jwt(
-            tckn=req["tckn"]
-        )
+        token = db.user_jwt(req["tckn"])
 
         return token
 

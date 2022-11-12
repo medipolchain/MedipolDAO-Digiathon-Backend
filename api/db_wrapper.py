@@ -126,18 +126,13 @@ class DbWrapper:
         :param user_public_address: the public address of the user to check
         """
         try:
-            if len(user_tckn) == 11:
-                collection_name = "users"
+            collection_name = "users"
 
-                collection = self.get_collection(collection_name)
-                user = collection.find_one({
-                    "tckn": user_tckn
-                })
-                return user is not None
-            else:
-                return {
-                    "message": "Invalid TCKN"
-                }
+            collection = self.get_collection(collection_name)
+            user = collection.find_one({
+                "tckn": user_tckn
+            })
+            return user is not None
 
         except Exception as e:
             print(e)

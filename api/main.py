@@ -197,12 +197,14 @@ async def set_mesken(info: Request):
             "katNo": req["katNo"],
             "kapiNo": req["kapiNo"],
             "rayicFiyat": req["rayicFiyat"],
-            "toplamPayda": req["toplamPayda"],
+            "pay": req["pay"],
+            "payda": req["payda"],
             "status": req["status"],
             "auctionInfo":{},
             "saleHistory":[],
             "maintenanceHistory":[],
             "age": req["age"],
+            "tckn": req["tckn"],
         }
         mesken_id = db.set_mesken(mesken_info,token)
 

@@ -77,6 +77,41 @@ async def get_users(info: Request):
     except Exception as e:
         return e
 
+@app.get("/get_meskens")
+async def get_meskens():
+    """
+    :return: meskens
+    """
+    try:
+        meskens = db.get_meskens()
+        if meskens:
+            return meskens
+        else:
+            return {
+                "message": "You are not authorized to view this page"
+            }
+
+    except Exception as e:
+        return e
+
+@app.post('/put_on_sale')
+async def put_on_sale(info: Request):
+    try:
+        req = await info.json()
+        token = req["token"]
+
+        sale_info = {
+            "meskenId": req["meskenId"],
+            "price": req["price"],
+            "amount": req["amount"],
+        }
+
+        user = db.put_on_sale(token, sale_info)
+
+        return user
+
+    except Exception as e:
+        return e
 
 # Admin permission only should be added
 @app.post("/get_user_by_tckn")

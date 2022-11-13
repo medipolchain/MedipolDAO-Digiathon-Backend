@@ -356,3 +356,37 @@ class DbWrapper:
         except Exception as e:
             print(e)
             return
+
+    def get_meskens(self):
+        """
+        :param db_name: the name of the database to get the users from
+        :param collection_name: the name of the collection to get the users from
+        :return: a list of all the users in the collection
+        """
+        try:
+            collection_name = "meskenlerim"
+
+            collection = self.get_collection(collection_name)
+            collections = collection.find()
+            meskens_list = [i for i in collections]
+            return {i: meskens_list[i] for i in range(len(meskens_list))}
+
+        except Exception as e:
+            print(e)
+            return e
+
+    def put_on_sale(self, token: str, sale_info:dict):
+        try:
+            decoded_user = self.verify(token)
+            userTCKN = decoded_user.detail["user"]["tckn"]
+            if not self.user_exists_by_tckn(userTCKN):
+                return HTTPException(status_code=400, detail="User does not exist!")
+
+            collection_name = "meskenlerim"
+            collection = self.get_collection(collection_name)
+            collection.update_one({"_id": sale_info["meskenId"]}, {"$set": {"status": "2", "saleInfo": sale_info}})
+            return True
+
+        except Exception as e:
+            print(e)
+            return

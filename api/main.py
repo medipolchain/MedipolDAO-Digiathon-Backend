@@ -264,6 +264,24 @@ async def update_public_address(info: Request):
     except Exception as e:
         return e
 
+@app.post("/update_mesken")
+async def update_mesken(info: Request):
+    """
+    :return: the mesken id
+    """
+    try:
+        req = await info.json()
+        token = req["token"]
+        meskenObjectId= req["meskenObjectId"]
+        meskenTokenId= req["meskenTokenId"]
+        mesken_id = db.update_mesken(token,meskenObjectId,meskenTokenId)
+
+        return mesken_id
+
+    except Exception as e:
+        return e
+
+
 
 @app.post("/user_jwt")
 async def user_jwt(info: Request):

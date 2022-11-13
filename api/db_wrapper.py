@@ -433,3 +433,19 @@ class DbWrapper:
         except Exception as e:
             print(e)
             return
+
+    def update_mesken(self, token: str, meskenObjectId:str, meskenTokenId: str):
+        try:
+            decoded_user = self.verify(token)
+            userTCKN = decoded_user.detail["user"]["tckn"]
+            if not self.user_exists_by_tckn(userTCKN):
+                return HTTPException(status_code=400, detail="User does not exist!")
+
+            collection_name = "meskenlerim"
+            collection = self.get_collection(collection_name)
+            collection.update_one({"_id": ObjectId(meskenObjectId)}, {"$set": {"meskenId": meskenTokenId}})
+            return True
+
+        except Exception as e:
+            print(e)
+            return

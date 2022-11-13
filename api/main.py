@@ -274,7 +274,12 @@ async def update_mesken(info: Request):
         token = req["token"]
         meskenObjectId= req["meskenObjectId"]
         meskenTokenId= req["meskenTokenId"]
-        mesken_id = db.update_mesken(token,meskenObjectId,meskenTokenId)
+        mesken_info = {
+            "date": req["date"],
+            "desc": req["desc"],
+            "price": req["price"],
+        }
+        mesken_id = db.update_mesken(token,meskenObjectId,meskenTokenId,mesken_info)
 
         return mesken_id
 

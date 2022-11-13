@@ -434,7 +434,7 @@ class DbWrapper:
             print(e)
             return
 
-    def update_mesken(self, token: str, meskenObjectId:str, meskenTokenId: str):
+    def update_mesken(self, token: str, meskenObjectId:str, meskenTokenId: str, mesken_info:dict):
         try:
             decoded_user = self.verify(token)
             userTCKN = decoded_user.detail["user"]["tckn"]
@@ -443,7 +443,11 @@ class DbWrapper:
 
             collection_name = "meskenlerim"
             collection = self.get_collection(collection_name)
-            collection.update_one({"_id": ObjectId(meskenObjectId)}, {"$set": {"meskenId": meskenTokenId}})
+            collection.update_one({"_id": ObjectId(meskenObjectId)}, {"$set": {"meskenId": meskenTokenId},
+            "$push": {"maintenanceHistory": {
+                mesken_info
+            }
+            }})
             return True
 
         except Exception as e:

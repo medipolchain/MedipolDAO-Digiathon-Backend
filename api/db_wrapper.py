@@ -375,6 +375,49 @@ class DbWrapper:
             print(e)
             return e
 
+    def get_mesken(self, meskenId):
+        """
+        :param db_name: the name of the database to get the users from
+        :param collection_name: the name of the collection to get the users from
+        :return: a list of all the users in the collection
+        """
+        try:
+            collection_name = "meskenlerim"
+
+            collection = self.get_collection(collection_name)
+            mesken = collection.find_one({
+                "_id": ObjectId(meskenId)
+            })
+            return mesken
+
+        except Exception as e:
+            print(e)
+            return e
+
+    def add_maintenance(self, meskenId:str,maintenance: str, token:str):
+        """
+        :param user_public_address: the public address of the user to update
+        :param maintenance: the maintenance to set
+        :return: True if the user was updated, Error otherwise
+        """
+        try:
+            decoded_user = self.verify(token)
+            userTCKN = decoded_user.detail["user"]["tckn"]
+            if not self.user_exists_by_tckn(userTCKN):
+                return HTTPException(status_code=400, detail="User does not exist!")
+
+            # push maintance history to mesken  
+            collection_name = "meskenlerim"
+            collection = self.get_collection(collection_name)
+            collection.update_one({"_id": ObjectId(meskenId)}, {"$push": {"maintenanceHistory": {
+                maintenance
+            }}})
+            return True
+
+        except Exception as e:
+            print(e)
+            return
+
     def put_on_sale(self, token: str, sale_info:dict):
         try:
             decoded_user = self.verify(token)

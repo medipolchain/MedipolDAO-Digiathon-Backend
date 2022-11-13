@@ -94,6 +94,37 @@ async def get_meskens():
     except Exception as e:
         return e
 
+@app.post('/get_mesken')
+async def get_mesken(info: Request):
+    """
+    :return: mesken
+    """
+    try:
+        req = await info.json()
+        mesken = db.get_mesken(req['meskenId'])
+        if mesken:
+            return mesken
+        else:
+            return {
+                "message": "You are not authorized to view this page"
+            }
+
+    except Exception as e:
+        return e
+
+@app.post('/add_maintenance')
+async def add_maintenance(info: Request):
+    """
+    :return: mesken
+    """
+    try:
+        req = await info.json()
+        maintenance = db.add_maintenance(req['meskenId'], req['maintenance'], req["token"])
+        return maintenance
+
+    except Exception as e:
+        return e
+
 @app.post('/put_on_sale')
 async def put_on_sale(info: Request):
     try:

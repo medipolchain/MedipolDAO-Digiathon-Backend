@@ -233,6 +233,7 @@ async def set_mesken(info: Request):
             "status": req["status"],
             "auctionInfo":{},
             "saleHistory":[],
+            "saleInfo":{},
             "maintenanceHistory":[],
             "age": req["age"],
             "tckn": req["tckn"],

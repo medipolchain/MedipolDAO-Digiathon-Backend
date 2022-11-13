@@ -427,7 +427,7 @@ class DbWrapper:
 
             collection_name = "meskenlerim"
             collection = self.get_collection(collection_name)
-            collection.update_one({"_id": sale_info["meskenId"]}, {"$set": {"status": "2", "saleInfo": sale_info}})
+            collection.update_one({"_id": ObjectId(sale_info["meskenId"])}, {"$set": {"status": "2", "saleInfo": sale_info}})
             return True
 
         except Exception as e:

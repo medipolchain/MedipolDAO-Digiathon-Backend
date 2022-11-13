@@ -166,6 +166,8 @@ async def set_mesken(info: Request):
             "status": req["status"],
             "auctionInfo":{},
             "saleHistory":[],
+            "maintenanceHistory":[],
+            "age": req["age"],
         }
         mesken_id = db.set_mesken(mesken_info,token)
 
